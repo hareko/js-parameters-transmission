@@ -1,0 +1,75 @@
+<?php
+/**
+ * JS parameters transmission
+ * 
+ * Usage sample's template
+ * 
+ * @package ParmTran
+ * @author Vallo Reima
+ * @copyright (C)2015
+ */
+
+/**
+ * form the table rows
+ * @param array $fld fields
+ * @param array $opt values
+ * @param array $bts buttons
+ * @return string
+ */
+function Rows($fld, $opt, $bts) {
+  $htm = '';
+  foreach ($fld as $key => $val) {  // display fields
+    $c = $opt[$key] ? '' : " class='hide'"; // hide not-valued
+    $htm .= "<tr{$c}><td>$val</td><th id='$key'>{$opt[$key]}</th></tr>\n";
+  }
+  $btn = "<input type='button' value='#v' title='#t'/>"; // button htm template
+  $c = !$opt['offset'] ? 'button' : ' hide'; // no response yet
+  $htm .= "<tr id='ajax' class='$c'><td>" . str_replace(array('#v','#t'), $bts['p'], $btn) . "</td><td>";
+  $htm .= str_replace(array('#v','#t'), $bts['a'], $btn) . "</td></tr>\n";
+  $c = $opt['offset'] ? 'button' : ' hide';  // response received
+  $htm .= "<tr id='done' class='$c'><td colspan='2'>" . str_replace(array('#v','#t'), $bts['g'], $btn) . "</td></tr>\n"; // 
+  return $htm;
+}
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ParmTran</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+      body, table{
+        text-align: center;
+        margin: auto;
+      }
+      h3 span{
+        font-size: 0.85em;
+        font-weight: normal;
+        font-style: italic;
+      }
+      span.error{
+        color: red;
+      }
+      .hide{
+        display: none;
+      }
+      th,td {
+        text-align: left;
+        padding-left: 1em;
+      }
+      .button td{
+        text-align: center;
+        padding-top: 1em;
+      }
+    </style>
+    <script type="text/javascript" src="ParmTran.js"></script>    
+    <script type="text/javascript" src="example.js"></script>    
+  </head>
+  <body>
+    <h3>Parameters transmission sample<br/>
+      <span id="prompt"></span></h3>
+    <table>
+      <?php echo Rows($fld, $opt, $bts); ?>
+    </table>
+    <form id="transit" action="<?php echo $action; ?>" class="hide"><?php echo $transit; ?></form>
+  </body>
+</html>
