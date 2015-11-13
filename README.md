@@ -9,7 +9,7 @@ You need to solve the following tasks to coordinate the activity on both sides:
 - handle the storage and request/response parameters.
 
 There are many different solutions for that and *ParmTran* JavaScript class is one of them.
-It supplies the necessary methods but assumes according support from the back-end.
+This class supplies necessary front-end methods but assumes according support from the back-end.
 
 ## How it works ##
 
