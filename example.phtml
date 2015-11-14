@@ -8,7 +8,7 @@
  * @author Vallo Reima
  * @copyright (C)2015
  */
-
+$js = pathinfo(__FILE__, PATHINFO_FILENAME) . '.js';
 /**
  * form the table rows
  * @param array $fld fields
@@ -62,7 +62,7 @@ function Rows($fld, $opt, $bts) {
       }
     </style>
     <script type="text/javascript" src="ParmTran.js"></script>    
-    <script type="text/javascript" src="example.js"></script>    
+    <script type="text/javascript" src="<?php echo $file; ?>.js"></script>    
   </head>
   <body>
     <h3>Parameters transmission sample<br/>
