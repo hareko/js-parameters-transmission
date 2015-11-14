@@ -91,5 +91,6 @@ if ($ajx) { // ajax json
   );
   $action = basename(__FILE__); // form action
   $transit = urlencode(json_encode($prm));  // transmit format
-  include(pathinfo(__FILE__, PATHINFO_FILENAME) . '.phtml'); // display
+  $file = pathinfo(__FILE__, PATHINFO_FILENAME);
+  include("$file.phtml"); // display
 }
