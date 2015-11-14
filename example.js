@@ -40,9 +40,9 @@ window.onload = function() {
       prm[ts.Get('tzo')] = (new Date()).getTimezoneOffset();
     }
     if (btn === 'ajax') {
-      rlt = ts.Ajax(prm, Response);
+      rlt = ts.Ajax(prm, Receive);
     } else {
-      rlt = ts.Request(prm, btn);
+      rlt = ts.Send(prm, btn);  // button name is method name
     }
     if (typeof rlt === 'string') {  // unsuccessful
       Status([rlt + ': ' + trg.value]);
@@ -51,11 +51,11 @@ window.onload = function() {
   };
 
   /**
-   * ajax response
+   * get ajax response
    * @param {object} rsp status,prompt,factor
    * @param {object} prm request parameters
    */
-  var Response = function(rsp, prm) {
+  var Receive = function(rsp, prm) {
     if (rsp.status) {
       for (var id in prm) {   // display requested values
         var o = document.getElementById(id);
@@ -82,14 +82,15 @@ window.onload = function() {
     if (err) {
       pmt.className = 'error'; // mark error message
       txt = err[0];
-      if (err.length > 1) {
-        alert(err.join("\n"));
-      }
     } else {
       pmt.className = '';
       txt = ts.Get('sts');  // current status
+      err = [];
     }
     pmt.innerHTML = txt;
+    if (err.length > 1) {
+      alert(err.join("\n"));
+    }
   };
 
   /**
