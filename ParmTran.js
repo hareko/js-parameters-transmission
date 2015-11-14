@@ -67,18 +67,18 @@ function ParmTran(id) {
   };
 
   /**
-   * GET/POST request
-   * @param {object} prm parameters
-   * @param {string} mth method (post/get)
+   * make GET/POST request
+   * @param {object} parm parameters
+   * @param {string} meth method (post/get)
    */
-  that.Request = function(prm, mth) {
+  that.Send = function(parm, meth) {
     if (form) {
-      form.method = mth === 'get' ? 'get' : 'post';
-      for (var a in prm) {  // form fields to send
+      form.method = meth === 'get' ? 'get' : 'post';
+      for (var a in parm) {  // form fields to send
         var obj = document.createElement('input');
         obj.type = 'hidden';
         obj.name = a;
-        obj.value = prm[a];
+        obj.value = parm[a];
         form.appendChild(obj);
       }
       form.submit();
@@ -88,38 +88,40 @@ function ParmTran(id) {
   };
   /**
    * read data thru XHR
-   * @param {object} prm dparameters
-   * @param {function} mth callback
+   * @param {object} parm parameters
+   * @param {function} func callback
    */
-  that.Ajax = function(prm, mth) {
+  that.Ajax = function(parm, func) {
     if (busy) {
       return; // just sending 
     } else {
       busy = true;
     }
-    var obj = GetHTTPObject();
-    if (!obj || !form) {
+    var xhr = GetHTTPObject();
+    if (!xhr || !form) {
       return transit.nosnd; // unuseable object(s)
     }
-    obj.onreadystatechange = function() {
-      if (obj.readyState === 4) {
-        if (obj.status === 200 || obj.status === 304) { // received
-          var rlt = that.Dec(obj.responseText); // json string to object
-          var f = true; // check empty object
-          for (var i in rlt) {
-            f = false; // not empty
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        var f = true;
+        if (xhr.status === 200) { // received
+          var rlt = that.Dec(xhr.responseText); // json string to object
+          if (typeof rlt.status === 'undefined') {  // unknown respone
+            f = form.action;
           }
-          if (f) {  // bad respone
-            rlt = {status: false, prompt: transit.noxhr, factor: form.action};
-          }
-          busy = false; // unlock
-          mth(rlt, prm);  // go to requestor
+        } else {  // unsuccessful
+          f = xhr.statusText + " (" + xhr.status + ")";
         }
+        if (f !== true){
+            rlt = {status: false, prompt: transit.noxhr, factor: f};  // error info
+        }
+        busy = false; // unlock
+        func(rlt, parm);  // return to sender
       }
     };
-    obj.open('POST', form.action, true);  // async
-    obj.setRequestHeader('Content-Type', 'application/json');
-    obj.send(JSON.stringify(prm));  // send json string in request body
+    xhr.open('POST', form.action, true);  // async
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(parm));  // send json string in request body
   };
 
   /**
