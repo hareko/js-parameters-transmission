@@ -51,19 +51,19 @@ Convert the (encoded) json string to the object
 - **data** - the string
 - **flag** - bool (*true* - urldecode the string, default by *false*)
 
-**ts.Request( prm, mth );**
+**ts.Send( parm, meth );**
 
 Send GET/POST request.
 
-- **prm** - request parameters object
-- **mth** - request method (*get/post*, default by *'post'*)
+- **parm** - request parameters object
+- **meth** - request method name (*get/post*, default by *'post'*)
 
-**ts.Ajax( prm, mth );**
+**ts.Ajax( parm, meth );**
 
 Make AJAX POST request.
 
-- **prm** - request parameters object
-- **mth** - callback method for the response
+- **parm** - request parameters object
+- **func** - callback function to receive the response
 
 ## AJAX response ##
 
@@ -73,7 +73,7 @@ The callback specified in the **Ajax** method receives two arguments:
     - **status** - bool (*true* - success, *false* - failed)
     - **prompt** - any prompt/error text or array of text lines
     - **factor** - result data returned by the back-end (format depends on context)
-- **prm** - request parameters
+- **parm** - request parameters
 
 ## The example ##
 
