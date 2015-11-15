@@ -10,13 +10,12 @@
 
 window.onload = function() {
 
-  var ts;  /* transit object */
+  var ts = new ParmTran(); /* transmission object */
 
   /**
    * set storage and events
    */
   var Init = function() {
-    ts = new ParmTran();
     var bts = document.getElementsByTagName('input');
     for (var i = 0; i < bts.length; i++) {
       AttachEventListener(bts[i], 'click', Send);
@@ -80,16 +79,15 @@ window.onload = function() {
     var txt;
     var pmt = document.getElementById(ts.Get('pmt')); // message area
     if (err) {
-      pmt.className = 'error'; // mark error message
-      txt = err[0];
+      txt = err;
+      pmt.className = 'error'; // indicate error
     } else {
+      txt = [ts.Get('sts')];  // current status
       pmt.className = '';
-      txt = ts.Get('sts');  // current status
-      err = [];
     }
-    pmt.innerHTML = txt;
-    if (err.length > 1) {
-      alert(err.join("\n"));
+    pmt.innerHTML = txt[0];
+    if (txt.length > 1) {
+      alert(txt.join("\n"));
     }
   };
 
