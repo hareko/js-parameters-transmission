@@ -20,13 +20,13 @@ JS makes requests via GET/POST where AJAX request sends the *JSON* string in the
 The back-end detects the request format and saves the parameters.
 The AJAX response is returned with the jsoned array in fixed format.
 
-The *ParmTrans* can be complemented with more methods and properties. So, it can be seen as a template for your own framework.
+The *ParmTran* can be complemented with more methods and properties. So, it can be seen as a template for your own framework.
 
 ## The usage ##
 
 You can instantiate in the global scope making the functionality available overall:
 
-**var ts = new ParmTrans( [ id ] );**
+**var ts = new ParmTran( [ id ] );**
 
 **id** - the form id from where to read the storage data (default by *'transit'*):
 
@@ -103,7 +103,7 @@ Examine the example files to follow the class' usage and the communication logic
 Upload the files to any web directory and run the *example.php*.
 The following files are included:
 
-- *ParmTrans.js* - the parameters transmission class
+- *ParmTran.js* - the parameters transmission class
 - *example.php* - the sample's back-end
 - *example.phtml* - the sample's template
 - *example.js* - the sample's front-end
