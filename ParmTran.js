@@ -2,6 +2,7 @@
  * JS parameters transmission class
  *
  * @package ParmTran
+ * @version 1.1
  * @author Vallo Reima
  * @copyright (C)2015
  */
@@ -13,10 +14,11 @@ function ParmTran(id) {
 
   var transit = {/* data storage */
     nosnd: "Can't send data",
-    noxhr: "Can't access server"
+    noxhr: "Can't access server",
+    busy: 'Sending now'
   };
-  var form = null;  /* request form object */
   var busy = false; /* send busy status */
+  var form = null;  /* request form object */
   var that = this;
 
   /**
@@ -70,13 +72,14 @@ function ParmTran(id) {
    * make GET/POST request
    * @param {object} parm parameters
    * @param {string} meth method (post/get)
-   * @return {mixed} string -- error
+   * @return {mixed} 
    */
   that.Send = function(parm, meth) {
-    if (busy) {
-      return; // just sending 
-    }else if (form) {
-      form.method = meth === 'get' ? 'get' : 'post';
+    var mth = meth === 'get' ? 'get' : 'post';  // take post if not get
+    if (busy) { // just sending 
+      return that.Enc([transit.busy, busy]);
+    } else if (form) {
+      busy = form.method = mth;
       for (var a in parm) {  // form fields to send
         var obj = document.createElement('input');
         obj.type = 'hidden';
@@ -84,9 +87,10 @@ function ParmTran(id) {
         obj.value = parm[a];
         form.appendChild(obj);
       }
-      form.submit();
-    } else {// no useable form (you can create dynamically)
-      return transit.nosnd;
+      form.submit();  // send form data
+      busy = false; // unlock
+    } else {// no useable form
+      return that.Enc([transit.nosnd, mth]);
     }
   };
   /**
@@ -96,14 +100,14 @@ function ParmTran(id) {
    * @return {mixed}
    */
   that.Ajax = function(parm, func) {
-    if (busy) {
-      return; // just sending 
+    if (busy) { // just sending 
+      return that.Enc([transit.busy, busy]);
     } else {
-      busy = true;
+      busy = 'ajax';
     }
     var xhr = GetHTTPObject();
     if (!xhr || !form) {
-      return transit.nosnd; // unuseable object(s)
+      return that.Enc([transit.nosnd, busy]); // unuseable object(s)
     }
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4) {
@@ -116,8 +120,8 @@ function ParmTran(id) {
         } else {  // unsuccessful
           f = xhr.statusText + " (" + xhr.status + ")";
         }
-        if (typeof f === 'string'){
-            rlt = {status: false, prompt: transit.noxhr, factor: f};  // error info
+        if (typeof f === 'string') {
+          rlt = {status: false, prompt: transit.noxhr, factor: f};  // error info
         }
         busy = false; // unlock
         func(rlt, parm);  // return to sender
@@ -125,7 +129,7 @@ function ParmTran(id) {
     };
     xhr.open('POST', form.action, true);  // async
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify(parm));  // send json string in request body
+    xhr.send(that.Enc(parm));  // send json string in request body
   };
 
   /**
@@ -133,6 +137,7 @@ function ParmTran(id) {
    *                    string - error
    */
   var GetHTTPObject = function() {
+    var e;
     var obj = false;//set to false, so if it fails, do nothing
     if (window.XMLHttpRequest) {//detect to see if browser allows this method
       obj = new XMLHttpRequest();//set var the new request
@@ -169,6 +174,20 @@ function ParmTran(id) {
     }
     return a;
   };
+  
+  /**
+   *  convert data to transit format
+   *  @param {object} data
+   *  @param {bool} flag -- true - urlencode
+   * @return {string} 
+   */
+  that.Enc = function(data, flag) {
+    var d = JSON.stringify(data);
+    if (flag === true) {
+      d = urlencode(d);
+    }
+    return d;
+  };
 
   /**
    *  decode the string
@@ -202,6 +221,47 @@ function ParmTran(id) {
     }
 
     ret = decodeURIComponent(ret);
+
+    return ret;
+  };
+
+  /**
+   *  encode the string
+   *  @author http://kevin.vanzonneveld.net
+   *  
+   *  @param {string} str
+   *  @return {string}
+   */
+  var urlencode = function(str) {
+    var histogram = {};
+    var ret = str.toString();
+
+    var replacer = function(search, replace, str) {
+      var tmp_arr = [];
+      tmp_arr = str.split(search);
+      return tmp_arr.join(replace);
+    };
+
+    // The histogram is identical to the one in urldecode.
+    histogram["'"] = '%27';
+    histogram['('] = '%28';
+    histogram[')'] = '%29';
+    histogram['*'] = '%2A';
+    histogram['~'] = '%7E';
+    histogram['!'] = '%21';
+    histogram['%20'] = '+';
+
+    ret = encodeURIComponent(ret);
+
+    for (var search in histogram) {
+      var replace = histogram[search];
+      ret = replacer(search, replace, ret); // Custom replace. No regexing
+    }
+
+    // Uppercase for full compatibility
+    return ret.replace(/(\%([a-z0-9]{2}))/g, function(full, m1, m2) {
+      return "%" + m2.toUpperCase();
+    });
 
     return ret;
   };
