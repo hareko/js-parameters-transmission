@@ -24,7 +24,7 @@ function ParmTran(id) {
    */
   var Init = function() {
     var d;
-    if (typeof id !== 'string') {
+    if (!id || typeof id !== 'string') {
       id = 'transit';
     }
     form = document.getElementById(id);
