@@ -6,28 +6,32 @@ You need to solve the following tasks to coordinate the activity on both sides:
 
 - prepare the storage data server-side and accept them client-side;
 - send/receive the request/response parameters;
-- handle the storage and request/response parameters.
+- handle the storage and the parameters.
 
 There are many different solutions for that and *ParmTran* JavaScript class is one of them.
 This class supplies necessary front-end methods but assumes according support from the back-end.
 
 ## How it works ##
 
-The back-end prepares and encodes the storage data, and places the data inside the *HTML* to be sent to JS.
+The back-end prepares and encodes the storage data, and places the data inside the *HTML* to be sent to the front-end.
 JS accepts the data and saves it into the storage. The storage data is accessed by the Get/Set methods and used internally.
 
 JS makes requests via GET/POST where AJAX request sends the *JSON* string in the request body.
-The back-end detects the request format and saves its parameters according to the sources priority.
+The back-end detects the request format and saves the parameters.
 The AJAX response is returned with the jsoned array in fixed format.
 
-## Instantiation ##
+The *ParmTrans* can be complemented with more methods and properties. So, it can be seen as a template for your own framework.
 
-**ts = new ParmTrans( [ id ] );**
+## The usage ##
+
+You can instantiate in the global scope making the functionality available overall:
+
+**var ts = new ParmTrans( [ id ] );**
 
 **id** - the form id from where to read the storage data (default by *'transit'*):
 
 The encoded data is located between the *form* tags. The data is decoded and saved, and the form content is cleared.
-This form with its *action* attribute is used further to send the requests.
+This form and its *action* attribute are used further to send the requests.
 
 ## Methods ##
 
@@ -72,8 +76,8 @@ The callback specified in the **Ajax** method receives two arguments:
 - **rsp** - response object; back-end must return it in the following format:
     - **status** - bool (*true* - success, *false* - failed)
     - **prompt** - any prompt/error text or array of text lines
-    - **factor** - result data returned by the back-end (format depends on context)
-- **parm** - request parameters
+    - **factor** - action result data (format depends on the context)
+- **parm** - request parameters object
 
 ## The example ##
 
