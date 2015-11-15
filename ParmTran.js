@@ -16,7 +16,7 @@ function ParmTran(id) {
     noxhr: "Can't access server"
   };
   var form = null;  /* request form object */
-  var busy = false; /* xhr busy status */
+  var busy = false; /* send busy status */
   var that = this;
 
   /**
@@ -70,9 +70,12 @@ function ParmTran(id) {
    * make GET/POST request
    * @param {object} parm parameters
    * @param {string} meth method (post/get)
+   * @return {mixed} string -- error
    */
   that.Send = function(parm, meth) {
-    if (form) {
+    if (busy) {
+      return; // just sending 
+    }else if (form) {
       form.method = meth === 'get' ? 'get' : 'post';
       for (var a in parm) {  // form fields to send
         var obj = document.createElement('input');
@@ -90,6 +93,7 @@ function ParmTran(id) {
    * read data thru XHR
    * @param {object} parm parameters
    * @param {function} func callback
+   * @return {mixed}
    */
   that.Ajax = function(parm, func) {
     if (busy) {
@@ -112,7 +116,7 @@ function ParmTran(id) {
         } else {  // unsuccessful
           f = xhr.statusText + " (" + xhr.status + ")";
         }
-        if (f !== true){
+        if (typeof f === 'string'){
             rlt = {status: false, prompt: transit.noxhr, factor: f};  // error info
         }
         busy = false; // unlock
