@@ -44,7 +44,7 @@ window.onload = function() {
       rlt = ts.Send(prm, btn);  // button name is method name
     }
     if (typeof rlt === 'string') {  // unsuccessful
-      Status([rlt + ': ' + trg.value]);
+      Status(ts.Dec(rlt));  // decode the error info and show
     }
     return false; // don't propagate
   };
