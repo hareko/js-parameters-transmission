@@ -48,9 +48,16 @@ Write the data element into the storage.
 - **name** - element name (property)
 - **value** - element (property) value
 
+**ts.Enc( data, flag );**
+
+Convert the data to (encoded) json string
+
+- **data** - input object, array, ...
+- **flag** - bool (*true* - urlencode the output string, default by *false*)
+
 **ts.Dec( data, flag );**
 
-Convert the (encoded) json string to the object
+Convert the (encoded) json string to the data object
 
 - **data** - the string
 - **flag** - bool (*true* - urldecode the string, default by *false*)
