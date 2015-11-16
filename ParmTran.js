@@ -132,7 +132,8 @@ function ParmTran(id) {
     };
     xhr.open(mth, form.action, true);  // async
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(that.Enc(parm));  // send json string in request body
+    var prm = parm ? that.Enc(parm) : '';
+    xhr.send(prm);  // send json string in request body
   };
 
   /**
