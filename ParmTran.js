@@ -98,11 +98,11 @@ function ParmTran(id) {
    * read data thru XHR
    * @param {object} parm parameters
    * @param {function} func callback
-   * @param {string} meth method (get/post/put/delete/...)
+   * @param {string} meth method (put/post)
    * @return {mixed}
    */
   that.Ajax = function(parm, func, meth) {
-    var mth = meth ? meth : 'get';  // take post if omitted
+    var mth = meth === 'put' ? 'put' : 'post';  // take post if not get
     if (busy) { // just sending 
       return that.Enc([transit.busy, busy]);
     } else {
