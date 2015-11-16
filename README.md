@@ -18,9 +18,9 @@ JS accepts the data and saves it into the storage. The storage data is accessed 
 
 JS makes requests via GET/POST where AJAX request sends the *JSON* string in the request body.
 The back-end detects the request format and saves the parameters.
-The AJAX response is returned with the jsoned array in fixed format.
+The AJAX response is returned with the array in specific format (see below).
 
-The *ParmTran* can be complemented with more methods and properties. So, it can be seen as a template for your own framework.
+The *ParmTran* can be complemented with more methods and properties. So, it can be a template for your own framework.
 
 ## The usage ##
 
@@ -48,39 +48,40 @@ Write the data element into the storage.
 - **name** - element name (property)
 - **value** - element (property) value
 
-**ts.Enc( data, flag );**
+**ts.Enc( data [, flag = false ] );**
 
 Convert the data to (encoded) json string
 
 - **data** - input object, array, ...
-- **flag** - bool (*true* - urlencode the output string, default by *false*)
+- **flag** - bool (*true* - urlencode the output string)
 
-**ts.Dec( data, flag );**
+**ts.Dec( data [, flag = false ] );**
 
 Convert the (encoded) json string to the data object
 
 - **data** - the string
-- **flag** - bool (*true* - urldecode the string, default by *false*)
+- **flag** - bool (*true* - urldecode the string)
 
-**ts.Send( parm, meth );**
+**ts.Send( parm [ , meth = 'post' ] );**
 
 Send GET/POST request.
 
 - **parm** - request parameters object
-- **meth** - request method name (*get/post*, default by *'post'*)
+- **meth** - request method name (*get/post*)
 
-**ts.Ajax( parm, meth );**
+**ts.Ajax( parm , func [ , meth = 'get' ] );**
 
-Make AJAX POST request.
+Make AJAX request.
 
 - **parm** - request parameters object
 - **func** - callback function to receive the response
+- **meth** - request method name (*get/post/put/delete/...*)
 
 ## AJAX response ##
 
 The callback specified in the **Ajax** method receives two arguments:
 
-- **rsp** - response object; back-end must return it in the following format:
+- **resp** - response object; back-end must return it in the following format:
     - **status** - bool (*true* - success, *false* - failed)
     - **prompt** - any prompt/error text or array of text lines
     - **factor** - action result data (format depends on the context)
