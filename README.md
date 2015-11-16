@@ -69,13 +69,13 @@ Send GET/POST request.
 - **parm** - request parameters object
 - **meth** - request method name (*get/post*)
 
-**ts.Ajax( parm , func [ , meth = 'get' ] );**
+**ts.Ajax( parm , func [ , meth = 'post' ] );**
 
 Make AJAX request.
 
 - **parm** - request parameters object
 - **func** - callback function to receive the response
-- **meth** - request method name (*get/post/put/delete/...*)
+- **meth** - request method name (*put/post*)
 
 ## AJAX response ##
 
