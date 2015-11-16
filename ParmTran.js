@@ -1,6 +1,7 @@
 /**
  * JS parameters transmission class
- *
+ * Transmit the parameters between front and back-end
+ * 
  * @package ParmTran
  * @version 1.1
  * @author Vallo Reima
@@ -97,13 +98,15 @@ function ParmTran(id) {
    * read data thru XHR
    * @param {object} parm parameters
    * @param {function} func callback
+   * @param {string} meth method (get/post/put/delete/...)
    * @return {mixed}
    */
-  that.Ajax = function(parm, func) {
+  that.Ajax = function(parm, func, meth) {
+    var mth = meth ? meth : 'get';  // take post if omitted
     if (busy) { // just sending 
       return that.Enc([transit.busy, busy]);
     } else {
-      busy = 'ajax';
+      busy = mth;
     }
     var xhr = GetHTTPObject();
     if (!xhr || !form) {
@@ -127,7 +130,7 @@ function ParmTran(id) {
         func(rlt, parm);  // return to sender
       }
     };
-    xhr.open('POST', form.action, true);  // async
+    xhr.open(mth, form.action, true);  // async
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(that.Enc(parm));  // send json string in request body
   };
